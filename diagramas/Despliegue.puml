@@ -1,0 +1,60 @@
+@startuml
+' --- Configuración del Título ---
+skinparam titleFontColor #80d3f9
+skinparam titleFontSize 24
+skinparam titleFontStyle bold
+
+title Diagrama de Despliegue UML - Sistema de Gestión Veterinaria
+
+' --- Apariencia con líneas rectas y colores ajustados ---
+skinparam linetype ortho
+skinparam backgroundColor #191a1c
+skinparam defaultFontColor #b5b3b4
+skinparam defaultFontName JetBrains Mono, Consolas, Arial
+
+' Nodos (Bloques externos): Mismo color del fondo, solo se ven sus líneas
+skinparam node {
+  BackgroundColor #191a1c
+  BorderColor #5a5b5c
+  FontColor #80d3f9
+}
+
+' Artefactos (Recuadros de información internos): Pintados
+skinparam artifact {
+  BackgroundColor #3c3f41
+  BorderColor #5a5b5c
+  FontColor #b5b3b4
+}
+
+' Flechas y conectores rectos
+skinparam arrow {
+  Color #b5b3b4
+  FontColor #b5b3b4
+}
+
+' --- Definición de Nodos y Artefactos (Textos originales exactos) ---
+node "Dispositivo Cliente (ej.\nNavegador Web o App\nMóvil)" as Cliente {
+    artifact "Artefacto:\nAplicación Cliente\nVeterinaria" as ArtCliente
+}
+
+node "Servidor de Aplicación /\nAPI REST\n(ej. Node.js o Spring Boot)" as ServidorApp {
+
+    ' Artefacto Superior
+    artifact "Artefacto: API\nRest Veterinaria\n(jar, exe)" as ArtAPI
+
+    ' Artefacto Inferior
+    artifact "Artefacto:\nServidor de\nAplicaciones\n(Servidor Web)" as ArtWeb
+
+    ' Esto fuerza a que se apilen en dos niveles verticalmente sin mostrar una flecha
+    ArtAPI -[hidden]down- ArtWeb
+}
+
+node "Servidor de Base de Datos\n(ej. PostgreSQL)" as ServidorDB {
+    artifact "Artefacto: Base de\nDatos Veterinaria\n(Esquema y Datos)" as ArtDB
+}
+
+' --- Conexiones de Red (Textos originales exactos) ---
+Cliente -right-> ServidorApp : "Conexión de Red\n(HTTPS)"
+ServidorApp -right-> ServidorDB : "TCP/IP\n(Puerto 3310)"
+
+@enduml

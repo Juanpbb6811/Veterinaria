@@ -1,0 +1,91 @@
+@startuml
+' --- Configuración del Título ---
+skinparam titleFontColor #80d3f9
+skinparam titleFontSize 24
+skinparam titleFontStyle bold
+
+title Casos de Uso - Sistema Veterinaria
+
+left to right direction
+
+' Oculta las etiquetas de los estereotipos para mantenerlo limpio
+hide stereotype
+
+' --- Configuración de colores base Darcula ---
+skinparam backgroundColor #191a1c
+skinparam defaultFontColor #b5b3b4
+skinparam defaultFontName JetBrains Mono, Consolas, Arial
+
+' --- Estilo del Recuadro del Sistema ---
+skinparam rectangle {
+  BackgroundColor #191a1c
+  BorderColor #5a5b5c
+  FontColor #b5b3b4
+}
+
+' --- Estilo de los Casos de Uso (Óvalos) ---
+skinparam usecase {
+  BackgroundColor #3c3f41
+  BorderColor #5a5b5c
+  FontColor #b5b3b4
+}
+
+' --- Actores base (Cabezas transparentes) ---
+skinparam actor {
+  BackgroundColor transparent
+}
+
+' --- Colores específicos para cada Actor ---
+skinparam actor<<Admin>> {
+  BorderColor #6a8759
+  FontColor #6a8759
+}
+skinparam actor<<Vet>> {
+  BorderColor #80d3f9
+  FontColor #80d3f9
+}
+skinparam actor<<Prop>> {
+  BorderColor #ffb6c1  ' Rosa claro
+  FontColor #ffb6c1
+}
+
+' --- Actores (Todos a la izquierda con su respectivo color) ---
+actor "Admin / Recepcionista" as Admin <<Admin>>
+actor "Veterinario" as Vet <<Vet>>
+actor "Propietario" as Prop <<Prop>>
+
+' --- Recuadro del Sistema Veterinaria (Casos apilados verticalmente) ---
+rectangle "Sistema Veterinaria" {
+  usecase "Registrar Mascota" as UC4
+  usecase "Actualizar / Eliminar Mascota" as UC3
+  usecase "Consultar Mascotas" as UC2
+  usecase "Registrar Propietarios" as UC5
+  usecase "Consultar Propietarios" as UC8
+  usecase "Eliminar Propietario" as UC9
+  usecase "Registrar Diagnostico" as UC6
+  usecase "Actualiza Diagnostico" as UC7
+  usecase "Consultar Historia clinica" as UC1
+}
+
+' --- Conexiones del Admin (Líneas Verdes) ---
+Admin -[#6a8759]- UC4
+Admin -[#6a8759]- UC3
+Admin -[#6a8759]- UC2
+Admin -[#6a8759]- UC5
+Admin -[#6a8759]- UC8
+Admin -[#6a8759]- UC9
+
+' --- Conexiones del Veterinario (Líneas Azules) ---
+Vet -[#80d3f9]- UC6
+Vet -[#80d3f9]- UC7
+Vet -[#80d3f9]- UC1
+Vet -[#80d3f9]- UC2
+
+' --- Conexiones del Propietario (Líneas Rosas Claras) ---
+Prop -[#ffb6c1]- UC4
+Prop -[#ffb6c1]- UC3
+Prop -[#ffb6c1]- UC2
+Prop -[#ffb6c1]- UC5
+Prop -[#ffb6c1]- UC1
+
+@enduml

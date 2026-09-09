@@ -1,0 +1,99 @@
+@startuml
+' --- Configuración del Título ---
+skinparam titleFontColor #b5b3b4
+skinparam titleFontSize 24
+skinparam titleFontStyle bold
+
+title Diagrama de Componentes (Arquitectura REST)
+
+' --- Apariencia exacta con tus colores Hexadecimales ---
+skinparam backgroundColor #191a1c
+skinparam defaultFontColor #b5b3b4
+skinparam defaultFontName JetBrains Mono, Consolas, Arial
+
+skinparam package {
+  BackgroundColor transparent
+  BorderColor #5a5b5c
+  FontColor #b5b3b4
+}
+
+skinparam component {
+  BackgroundColor #3c3f41
+  BorderColor #5a5b5c
+  FontColor #b5b3b4
+}
+
+skinparam interface {
+  BackgroundColor #3c3f41
+  BorderColor #b5b3b4
+  FontColor #b5b3b4
+}
+
+skinparam arrow {
+  Color #b5b3b4
+  FontColor #b5b3b4
+}
+
+skinparam componentStyle uml2
+
+' --- 1. Definición de los Componentes ---
+component "<<componente>>\nSingle Page Application (SPA)" as UI
+
+package "Capa Web" {
+    component "<<componente>>\nHistoriaClinicaController" as HC_Ctrl
+    component "<<componente>>\nMascotaController" as M_Ctrl
+}
+
+package "Capa de Lógica" {
+    component "<<componente>>\nHistoriaClinicaService" as HC_Svc
+    component "<<componente>>\nMascotaService" as M_Svc
+}
+
+package "Capa de Persistencia" {
+    component "<<componente>>\nHistoriaClinicaRepository" as HC_Repo
+    component "<<componente>>\nMascotaRepository" as M_Repo
+}
+
+component "<<componente>>\nSupabase (PostgreSQL)" as DB
+
+' --- 2. Definición de Interfaces (Los enchufes) ---
+interface "REST\nHistoria" as IRest1
+interface "REST\nMascota" as IRest2
+interface "Lógica\nHistoria" as IHC
+interface "Lógica\nMascota" as IMascota
+interface "Datos\nHistoria" as IDataHC
+interface "Datos\nMascota" as IDataM
+interface "JDBC" as IJdbc
+
+' --- 3. Conexiones y Montajes ---
+
+' Ramificación 1: Peticiones del Cliente a los Controladores
+UI --( IRest1
+IRest1 -- HC_Ctrl
+
+UI --( IRest2
+IRest2 -- M_Ctrl
+
+' Ramificación 2: Controladores a Servicios
+HC_Ctrl --( IHC
+IHC -- HC_Svc
+
+M_Ctrl --( IMascota
+IMascota -- M_Svc
+
+' Conexión cruzada
+HC_Svc .right.> IMascota : <<use>>
+
+' Ramificación 3: Servicios a Repositorios
+HC_Svc --( IDataHC
+IDataHC -- HC_Repo
+
+M_Svc --( IDataM
+IDataM -- M_Repo
+
+' Convergencia: Base de datos
+HC_Repo --( IJdbc
+M_Repo --( IJdbc
+IJdbc -- DB
+
+@enduml

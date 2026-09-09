@@ -1,0 +1,68 @@
+@startuml
+' --- Configuración del Título ---
+skinparam titleFontColor #80d3f9
+skinparam titleFontSize 24
+skinparam titleFontStyle bold
+
+title Diagrama de Actividades - Flujo del Sistema
+
+' --- Apariencia Darcula ---
+skinparam backgroundColor #191a1c
+skinparam defaultFontColor #b5b3b4
+skinparam defaultFontName JetBrains Mono, Consolas, Arial
+
+skinparam activity {
+  BackgroundColor #3c3f41
+  BorderColor #5a5b5c
+  FontColor #b5b3b4
+  DiamondBackgroundColor #3c3f41
+  DiamondBorderColor #5a5b5c
+  DiamondFontColor #80d3f9
+}
+skinparam arrow {
+  Color #b5b3b4
+  FontColor #b5b3b4
+}
+
+' --- Inicio del Flujo ---
+:Administrador / Recepcionista;
+
+' --- Loop de Propietario ---
+repeat :Ingresar datos\n'Propietario';
+  backward :Datos\nInvalidos;
+repeat while (¿Datos\nValidos?) is (No) not (Si)
+
+:Guardar\n'Propietario';
+
+' --- Loop de Mascota (Anidado para "Otra mascota") ---
+repeat
+  repeat :Ingresar datos\n'Mascota';
+    backward :Datos\nInvalidos;
+  repeat while (¿Datos\nValidos?) is (No) not (Si)
+
+  :Guardar\n'Mascota';
+repeat while (¿Registrar\notra mascota?) is (Si) not (No)
+
+' --- Loop de Asignación de Veterinario ---
+repeat :Asignar\n'Veterinario';
+repeat while (¿Veterinario\ndisponible?) is (No) not (Si)
+
+:Asignar 'Veterinario'\na 'Mascota';
+
+' --- Loop de Diagnóstico ---
+repeat :Ingresar\n'Diagnostico';
+  backward :Datos\ninvalidos;
+repeat while (¿Datos\nvalidos?) is (No) not (Si)
+
+:Guardar\n'Diagnostico';
+
+' --- Condición Final ---
+if (¿Mirar\n'Historia\nClinica'?) then (Si)
+  :Listar\n'Historia\nClinica';
+else (No)
+endif
+
+:Fin;
+detach
+
+@enduml

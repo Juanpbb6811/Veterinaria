@@ -1,0 +1,79 @@
+@startuml
+' --- Configuración del Título ---
+skinparam titleFontColor #b5b3b4
+skinparam titleFontSize 24
+skinparam titleFontStyle bold
+
+title Diagrama de Secuencia
+
+' --- Apariencia exacta con tus colores Hexadecimales ---
+skinparam backgroundColor #191a1c
+skinparam defaultFontColor #b5b3b4
+skinparam defaultFontName JetBrains Mono, Consolas, Arial
+
+' Estilos para las cajas superiores (Participantes)
+skinparam participant {
+  BackgroundColor #3c3f41
+  BorderColor #5a5b5c
+  FontColor #b5b3b4
+}
+
+' Estilos para las líneas, flechas y la caja condicional (Alt)
+skinparam sequence {
+  LifeLineBackgroundColor #3c3f41
+  LifeLineBorderColor #5a5b5c
+  ArrowColor #b5b3b4
+  ArrowFontColor #b5b3b4
+
+  GroupBackgroundColor transparent
+  GroupBorderColor #5a5b5c
+  GroupFontColor #b5b3b4
+}
+
+' --- Participantes ---
+participant "App Móvil (Usuario)" as App
+participant "API REST" as API
+participant "Base de datos" as DB
+
+' --- Flujo 1: Registrar Propietario ---
+App -> API : Registrar Propietario (Datos)
+activate API
+
+API -> DB : Insertar Registro (Propietario)
+activate DB
+DB --> API : ID Generado
+deactivate DB
+
+API --> App : Mensaje de Éxito
+deactivate API
+
+' --- Flujo 2: Registrar Mascota ---
+App -> API : Registrar Mascota (Datos, PropietarioID)
+activate API
+
+API -> DB : Validar Existencia Propietario
+activate DB
+DB --> API : Propietario Encontrado/No Encontrado
+deactivate DB
+
+' --- Bloque Condicional ---
+' Forzamos el color cian directamente en el texto para evitar el azul oscuro por defecto
+alt <color:#80d3f9>Si el propietario NO existe</color>
+    API --> App : Propietario no encontrado (Error 404)
+
+else <color:#80d3f9>Si el propietario SÍ existe</color>
+    API -> DB : Guardar Mascota (Datos)
+    activate DB
+    DB --> API : Mascota ID Generada
+    deactivate DB
+
+    API -> DB : Crear Historia Clínica (MascotaID)
+    activate DB
+    DB --> API : Historia Clínica Creada
+    deactivate DB
+
+    API --> App : Mascota Registrada Correctamente
+end
+
+deactivate API
+@enduml
