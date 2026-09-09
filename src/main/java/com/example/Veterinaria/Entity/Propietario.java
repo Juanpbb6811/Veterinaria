@@ -1,8 +1,8 @@
 package com.example.Veterinaria.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.util.List;
 
 @Entity
@@ -19,8 +19,8 @@ public class Propietario {
     private String telefono;
     private String correo;
 
-    // Relacion un propietario tiene Varias mascotas
-    @OneToMany(mappedBy = "propietario", cascade = CascadeType.ALL, orphanRemoval = true)
+    // Aquí le decimos a Jackson que ignore esta lista al convertir a JSON
+    @OneToMany(mappedBy = "propietario", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Mascota> mascotas;
-
 }
